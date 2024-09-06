@@ -1,25 +1,35 @@
 import "./style.css";
-
 import * as THREE from "three";
-
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+
+// Scene
 
 const scene = new THREE.Scene();
 
-const camera = new THREE.PerspectiveCamera(
-  75,
-  window.innerWidth / window.innerHeight,
-  0.1,
-  1000
-);
+// Renderer
+
+const width = window.innerWidth;
+const height = window.innerHeight;
 
 const renderer = new THREE.WebGLRenderer({
   canvas: document.querySelector("#bg"),
 });
 
+renderer.setSize(width, height);
 renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(window.innerWidth, window.innerHeight);
+
+// Camera
+
+const fov = 75;
+const aspect = window.innerWidth / window.innerHeight;
+const near = 0.1;
+const far = 100;
+
+const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+
 camera.position.setZ(30);
+
+// Geometry
 
 const geometry = new THREE.TorusGeometry(10, 3, 16, 100);
 const material = new THREE.MeshStandardMaterial({ color: 0xff6347 });
@@ -51,25 +61,24 @@ const mike = new THREE.Mesh(
   new THREE.MeshBasicMaterial({ map: mikeTexture })
 );
 
-const ballTexture = new THREE.TextureLoader().load('painted_brick.jpg');
+const ballTexture = new THREE.TextureLoader().load("painted_brick.jpg");
 
 const ball = new THREE.Mesh(
-  new THREE.SphereGeometry( 3, 32, 32),
-  new THREE.MeshStandardMaterial( {
-    map: ballTexture
+  new THREE.SphereGeometry(3, 32, 32),
+  new THREE.MeshStandardMaterial({
+    map: ballTexture,
   })
-)
+);
 
-scene.add(mike)
-scene.add(ball)
+scene.add(mike);
+scene.add(ball);
 
-ball.position.z = 30
+ball.position.z = 30;
 ball.position.setX(-10);
 
-mike.position.z = 20
+mike.position.z = 20;
 
 function moveCamera() {
-
   const t = document.body.getBoundingClientRect().top;
   ball.rotation.x += 0.05;
   ball.rotation.y += 0.075;
@@ -81,10 +90,9 @@ function moveCamera() {
   camera.position.z = 20 + t * -0.05;
   camera.position.x = t * -0.002;
   camera.position.y = t * -0.002;
-
 }
 
-document.body.onscroll = moveCamera
+document.body.onscroll = moveCamera;
 
 function animate() {
   requestAnimationFrame(animate);
